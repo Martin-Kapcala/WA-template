@@ -3,4 +3,4 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "IT3 je ..."
+    return "IT3 je nejlepší..."

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for("static", filename="style.css" )}}">
+</head>
+<body>
+
+    <h1>Ahoj {{ user.get_nick() }}</h1>
+    <table>
+        <tr><th>nick</th><th>e-mail</th><th>datum registrace</th></tr>
+        <tr><td>{{ user.get_nick() }}</td><td>{{ user.get_email()}}</td> <td>{{ user.get_datum_registrace() }}</td></tr>
+    </table>
+</body>
+</html>

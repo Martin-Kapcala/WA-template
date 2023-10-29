@@ -11,8 +11,13 @@ def home():
 
 @app.route("/contact")
 def contact():
-    martin = User("Pepa")
-    return render_template("index.html", user = martin)
+    martin = User("Martin", None)
+    pepa = User("Pepa", "pepa@mail.cz")
+
+
+    users = [martin, pepa]
+
+    return render_template("index.html", user = users)
 
 
 if __name__ == '__main__':

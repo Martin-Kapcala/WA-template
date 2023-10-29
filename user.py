@@ -1,17 +1,16 @@
 from datetime import date
 class User:
-    
-    
-    def __init__(self,nick,email, datumReg):
+    #Můžeme mít jen jeden konstruktor
+    def __init__(self,nick,email):
         self.__email = email
-        self.__datumReg = datumReg
-        self.__nick = nick
-
-    def __init__(self, nick):
-        self.__nick = nick
-        self.__email = "nezadán"
         self.__datumReg = date.today()
+        if email == None:
+            email = "Nezadán"
+        else:
+            self.__email = email
 
+        self.__nick = nick
+    
     def get_nick(self):
         return self.__nick
     

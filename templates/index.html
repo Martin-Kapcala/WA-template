@@ -5,10 +5,16 @@
 </head>
 <body>
     
-    <h1>Ahoj {{ user[1].get_nick() }}</h1>
+    <h1>Ahoj {{ uzivatel.get_nick() }}</h1>
     <table>
         <tr><th>nick</th><th>e-mail</th><th>datum registrace</th></tr>
-        <tr><td>{{ user[0].get_nick() }}</td><td>{{ user[0].get_email()}}</td> <td>{{ user[0].get_datum_registrace() }}</td></tr>
+        <tr><td>{{ uzivatel.get_nick()}}</td><td>{{ uzivatel.get_email()}}</td> <td>{{ uzivatel.get_datum_registrace() }}</td></tr>
     </table>
+    <h2>Vyhledávací formulář</h2>
+    <form method="get">
+        <label id="nick">Nick:</label>
+        <input type="text" name="nick" id="nick" >
+        <input type="submit" name="odeslat" id="odeslat">
+    </form>
 </body>
 </html>

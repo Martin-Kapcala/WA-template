@@ -2,10 +2,9 @@ from datetime import date
 class User:
     #Můžeme mít jen jeden konstruktor
     def __init__(self,nick,email):
-        self.__email = email
         self.__datumReg = date.today()
         if email == None:
-            email = "Nezadán"
+            self.__email = "Nezadán"
         else:
             self.__email = email
 
@@ -26,7 +25,7 @@ class User:
     def toString(self):
         return (f"<p><b>User:</b> {self.get_nick()}</br><b>e-mail:</b> {self.__email}\n</br><b>Datum registrace:</b> {self.__datumReg}</p>")
     
-    from flask import Flask
+
 
         
 

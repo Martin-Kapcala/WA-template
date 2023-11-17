@@ -5,7 +5,7 @@
 </head>
 <body>
     
-    <h1>Ahoj {{ uzivatel.get_nick() }}</h1>
+    <h1>Ahoj {{ uzivatelNick }}</h1>
     <table>
         <tr><th>nick</th><th>e-mail</th><th>datum registrace</th></tr>
         <tr><td>{{ uzivatel.get_nick()}}</td><td>{{ uzivatel.get_email()}}</td> <td>{{ uzivatel.get_datum_registrace() }}</td></tr>
@@ -16,5 +16,13 @@
         <input type="text" name="nick" id="nick" >
         <input type="submit" name="odeslat" id="odeslat">
     </form>
+
+    <div class="center">
+        <h1> Nahrávání souborů do databáze</h1>
+        <form method="POST" action="/" enctype="multipart/form-data">
+            <input class="ok" type="file" name="file">
+            <button class="op">Submit</button>
+        </form>
+    </div>
 </body>
 </html>

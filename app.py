@@ -14,15 +14,6 @@ class Upload(db.Model):
     filename = db.Column(db.String(50))
     data = db.Column(db.LargeBinary)
 
-
-#Hrátky s uživateli - vytvoření testovacích instancí objektu Uzivatel    
-martin = User("Martin", None)
-pepa = User("Pepa", "pepa@mail.cz")
-ela = User("Ela", "ela@mail.cz")
-
-#Pole uživatelů
-users = [martin, pepa, ela]
-
 #Načtení hlavní stránky
 @app.route("/", methods = ["GET", "POST"])
 def home():
@@ -39,9 +30,21 @@ def home():
  
 @app.route('/download/<upload_id>')
 def download(upload_id):
-    upload = Upload.query.filter_by(id=upload_id).first()
-    return send_file(BytesIO(upload.data), 
-                     download_name=upload.filename, as_attachment=True)
+    try:
+        upload = Upload.query.filter_by(id=upload_id).first()
+        return send_file(BytesIO(upload.data), 
+                        download_name=upload.filename, as_attachment=True)
+    except :
+        return f'Error: file  ID {upload_id} not found!'
+
+#Hrátky s uživateli - vytvoření testovacích instancí objektu Uzivatel    
+martin = User("Martin", None)
+pepa = User("Pepa", "pepa@mail.cz")
+ela = User("Ela", "ela@mail.cz")
+
+#Pole uživatelů
+users = [martin, pepa, ela]
+
 
 @app.route("/contact", methods = ["GET"])
 def contact():

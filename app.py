@@ -1,26 +1,22 @@
 from io import BytesIO #Metody potřebné pro práci se soubory
-from flask import Flask, render_template, redirect, url_for, request, send_file
+from flask import Flask, render_template, redirect, url_for, request, send_file, session
 from flask_sqlalchemy import SQLAlchemy #Metody potřebné pro práci s databází
+from flask_session import Session
+
 from user import *
 
 app = Flask(__name__)
 
+#Inicializace databáze
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+#Třída pro práci s databází vytvoří tabulku o třech zmíněných sloupcích
 class Upload(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(50))
     data = db.Column(db.LargeBinary)
-
-#Hrátky s uživateli - vytvoření testovacích instancí objektu Uzivatel    
-martin = User("Martin", None)
-pepa = User("Pepa", "pepa@mail.cz")
-ela = User("Ela", "ela@mail.cz")
-
-#Pole uživatelů
-users = [martin, pepa, ela]
 
 #Načtení hlavní stránky
 @app.route("/", methods = ["GET", "POST"])
@@ -34,13 +30,31 @@ def home():
         return f'Uploaded: {file.filename}'
     
     return render_template("upload.html")
+@app.route('/files')
+def listOfFIles():
 
- 
+    listOfFiles = Upload.query.all()
+
+    return render_template("list-of-files.html", len = len(listOfFiles), listOfFiles = listOfFiles)
+
+#Stažení souboru do PC, který je uložený v databázi. 
 @app.route('/download/<upload_id>')
 def download(upload_id):
-    upload = Upload.query.filter_by(id=upload_id).first()
-    return send_file(BytesIO(upload.data), 
-                     download_name=upload.filename, as_attachment=True)
+    try:
+        upload = Upload.query.filter_by(id=upload_id).first()
+        return send_file(BytesIO(upload.data), 
+                        download_name=upload.filename, as_attachment=True)
+    except :
+        return f'Error: file  ID {upload_id} not found!'
+
+#Hrátky s uživateli - vytvoření testovacích instancí objektu Uzivatel    
+martin = User("Martin", None)
+pepa = User("Pepa", "pepa@mail.cz")
+ela = User("Ela", "ela@mail.cz")
+
+#Pole uživatelů
+users = [martin, pepa, ela]
+
 
 @app.route("/contact", methods = ["GET"])
 def contact():
@@ -58,8 +72,11 @@ def detail_contact(nick):
             break
     
     return render_template("404.html", user = nick)
-           
-    
+ 
+ #Login uživatele, zatím bez hesla          
+ @app.route("/login", methods=["POST", "GET"])
+def login():
+    return render_template("login.html")   
 
 if __name__ == '__main__':
    app.run(debug = True)

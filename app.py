@@ -2,6 +2,7 @@ from io import BytesIO #Metody potřebné pro práci se soubory
 from flask import Flask, render_template, redirect, url_for, request, send_file, session
 from flask_sqlalchemy import SQLAlchemy #Metody potřebné pro práci s databází
 from flask_session import Session
+from flask_login import LoginManager, UserMixin
 
 from user import *
 
@@ -12,11 +13,34 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+# LoginManager is needed for our application 
+# to be able to log in and out users
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
 #Třída pro práci s databází vytvoří tabulku o třech zmíněných sloupcích
 class Upload(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(50))
     data = db.Column(db.LargeBinary)
+
+# Create user model
+class Users(UserMixin, db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String(250), unique=True,
+						nullable=False)
+	password = db.Column(db.String(250),
+						nullable=False)
+
+
+# Initialize app with extension
+db.init_app(app)
+# Create database within app context
+
+with app.app_context():
+	db.create_all()
+
 
 #Načtení hlavní stránky
 @app.route("/", methods = ["GET", "POST"])
@@ -74,7 +98,7 @@ def detail_contact(nick):
     return render_template("404.html", user = nick)
  
  #Login uživatele, zatím bez hesla          
- @app.route("/login", methods=["POST", "GET"])
+@app.route("/login", methods=["POST", "GET"])
 def login():
     return render_template("login.html")   
 

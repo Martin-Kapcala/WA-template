@@ -100,7 +100,12 @@ def detail_contact(nick):
  #Login uživatele, zatím bez hesla          
 @app.route("/login", methods=["POST", "GET"])
 def login():
-    return render_template("login.html")   
+    return render_template("login.html")
+
+# Creates a user loader callback that returns the user object given an id
+@login_manager.user_loader
+def loader_user(user_id):
+    return Users.query.get(user_id)   
 
 if __name__ == '__main__':
    app.run(debug = True)

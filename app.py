@@ -34,6 +34,16 @@ class Users(UserMixin, db.Model):
 						nullable=False)
 
 
+#Třída pro práci s databází a produkty vytvoří tabulku o pěti zmíněných sloupcích
+class UploadItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nameItem = db.Column(db.String(50), )
+    descriptionItem = db.Column(db.Text)
+    priceItem = db.Column(db.Integer)
+    filename = db.Column(db.String(50))
+    data = db.Column(db.LargeBinary)
+
+
 # Initialize app with extension
 db.init_app(app)
 # Create database within app context
@@ -54,6 +64,7 @@ def home():
         return f'Uploaded: {file.filename}'
     
     return render_template("upload.html")
+
 @app.route('/files')
 def listOfFIles():
 
@@ -107,14 +118,21 @@ def login():
 def loader_user(user_id):
     return Users.query.get(user_id) 
 
-#Třída pro práci s databází a produkty vytvoří tabulku o pěti zmíněných sloupcích
-class UploadItem(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nameItem = db.Column(db.String(50), )
-    descriptionItem = db.Column(db.Text)
-    priceItem = db.Column(db.Integer)
-    filename = db.Column(db.String(50))
-    data = db.Column(db.LargeBinary)
+#Načtení hlavní stránky
+@app.route("/upload-product", methods = ["GET", "POST"])
+def home():
+
+    if request.method == 'POST':
+        nameItem = request.form['nameItem']
+        descriptionItem = request.form['descriptionItem']
+        priceItem = request.form['priceItem']
+        file = request.files['file']
+        upload = UploadItem(nameItem, descriptionItem, priceItem, filename=file.filename, data=file.read())
+        db.session.add(upload)
+        db.session.commit()
+        return f'Uploaded: {file.filename}'
+    
+    return render_template("upload-product.html")
 
 
 if __name__ == '__main__':

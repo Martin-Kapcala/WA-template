@@ -13,10 +13,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+# Initialize app with extension
+#db.init_app(app)
+# Create database within app context
+
+#with app.app_context():
+#	db.create_all()
+
 # LoginManager is needed for our application 
 # to be able to log in and out users
-login_manager = LoginManager()
-login_manager.init_app(app)
+#login_manager = LoginManager()
+#login_manager.init_app(app)
 
 
 #Třída pro práci s databází vytvoří tabulku o třech zmíněných sloupcích
@@ -42,15 +49,6 @@ class UploadItem(db.Model):
     priceItem = db.Column(db.Integer)
     filename = db.Column(db.String(50))
     data = db.Column(db.LargeBinary)
-
-
-# Initialize app with extension
-db.init_app(app)
-# Create database within app context
-
-with app.app_context():
-	db.create_all()
-
 
 #Načtení hlavní stránky
 @app.route("/", methods = ["GET", "POST"])
@@ -114,23 +112,25 @@ def login():
     return render_template("login.html")
 
 # Creates a user loader callback that returns the user object given an id
-@login_manager.user_loader
-def loader_user(user_id):
-    return Users.query.get(user_id) 
+#@login_manager.user_loader
+#def loader_user(user_id):
+#    return Users.query.get(user_id) 
 
-#Načtení hlavní stránky
+#Zpracovnání a nahrání porduktu do databáze
 @app.route("/upload-product", methods = ["GET", "POST"])
-def home():
+def upload_product():
 
     if request.method == 'POST':
         nameItem = request.form['nameItem']
         descriptionItem = request.form['descriptionItem']
         priceItem = request.form['priceItem']
         file = request.files['file']
+        
         upload = UploadItem(nameItem, descriptionItem, priceItem, filename=file.filename, data=file.read())
         db.session.add(upload)
         db.session.commit()
-        return f'Uploaded: {file.filename}'
+        
+        return f'Položka vytvořena: {nameItem}'
     
     return render_template("upload-product.html")
 

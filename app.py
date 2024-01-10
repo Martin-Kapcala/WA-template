@@ -105,7 +105,15 @@ def login():
 # Creates a user loader callback that returns the user object given an id
 @login_manager.user_loader
 def loader_user(user_id):
-    return Users.query.get(user_id)   
+    return Users.query.get(user_id) 
+
+#Třída pro práci s databází vytvoří tabulku o třech zmíněných sloupcích
+class UploadItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nameItem = db.Column(db.String(50))
+    descriptionItem = db.Column(db.Text)
+    filename = db.Column(db.String(50))
+    data = db.Column(db.LargeBinary)  
 
 if __name__ == '__main__':
    app.run(debug = True)

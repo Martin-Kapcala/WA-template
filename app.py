@@ -107,13 +107,15 @@ def login():
 def loader_user(user_id):
     return Users.query.get(user_id) 
 
-#Třída pro práci s databází vytvoří tabulku o třech zmíněných sloupcích
+#Třída pro práci s databází a produkty vytvoří tabulku o pěti zmíněných sloupcích
 class UploadItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nameItem = db.Column(db.String(50))
+    nameItem = db.Column(db.String(50), )
     descriptionItem = db.Column(db.Text)
+    priceItem = db.Column(db.Integer)
     filename = db.Column(db.String(50))
-    data = db.Column(db.LargeBinary)  
+    data = db.Column(db.LargeBinary)
+
 
 if __name__ == '__main__':
    app.run(debug = True)

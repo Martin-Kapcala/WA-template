@@ -42,19 +42,19 @@ class Users(UserMixin, db.Model):
 
 
 #Třída pro práci s databází a produkty vytvoří tabulku o pěti zmíněných sloupcích
-class UploadItem(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nameItem = db.Column(db.String(50), )
-    descriptionItem = db.Column(db.Text)
-    priceItem = db.Column(db.Integer)
-    filename = db.Column(db.String(50))
-    data = db.Column(db.LargeBinary)
+# class UploadItem(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     nameItem = db.Column(db.String(50), )
+#     descriptionItem = db.Column(db.Text)
+#     priceItem = db.Column(db.Integer)
+#     filename = db.Column(db.String(50))
+#     data = db.Column(db.LargeBinary)
 
 #Načtení hlavní stránky
 @app.route("/", methods = ["GET", "POST"])
 def home():
 
-    if request.method == 'POST':
+    if request.method == 'GET':
         file = request.files['file']
         upload = Upload(filename=file.filename, data=file.read())
         db.session.add(upload)
@@ -117,23 +117,23 @@ def login():
 #    return Users.query.get(user_id) 
 
 #Zpracovnání a nahrání porduktu do databáze
-@app.route("/upload-product", methods = ["GET", "POST"])
-def upload_product():
+# @app.route("/upload-product", methods = ["GET", "POST"])
+# def upload_product():
 
-    if request.method == 'POST':
-        nameItem = request.form['nameItem']
-        descriptionItem = request.form['descriptionItem']
-        priceItem = request.form['priceItem']
-        file = request.files['file']
+#     if request.method == 'POST':
+#         nameItem = request.form['nameItem']
+#         descriptionItem = request.form['descriptionItem']
+#         priceItem = request.form['priceItem']
+#         file = request.files['file']
         
-        upload = UploadItem(nameItem, descriptionItem, priceItem, filename=file.filename, data=file.read())
-        db.session.add(upload)
-        db.session.commit()
+#         upload = UploadItem(nameItem, descriptionItem, priceItem, filename=file.filename, data=file.read())
+#         db.session.add(upload)
+#         db.session.commit()
         
-        return f'Položka vytvořena: {nameItem}'
+#         return f'Položka vytvořena: {nameItem}'
     
-    return render_template("upload-product.html")
+#     return render_template("upload-product.html")
 
 
 if __name__ == '__main__':
-   app.run(debug = True)
+   app.run(debug = True, port=8001)
